@@ -1,19 +1,18 @@
 import NextLink from "next/link";
+import { AuthProvider, useSigninCheck } from "reactfire";
 
 export default function NavBar() {
-  // const { user, username } = {};
-  const user = null;
-  const username = null;
+  const { status, data: signinResult } = useSigninCheck();
   return (
     <nav className="navbar">
       <ul>
         <li>
           <NextLink href="/#">
-            <button className="btn-logo">FEED</button>
+            <button className="btn-logo">NXT</button>
           </NextLink>
         </li>
 
-        {username && (
+        {signinResult?.signedIn && (
           <>
             <li className="push-left">
               <NextLink href="/admin">
@@ -21,13 +20,13 @@ export default function NavBar() {
               </NextLink>
             </li>
             <li>
-              <NextLink href={`/${username}`}>
-                <img src={user?.photoURL} />
+              <NextLink href={`/${signinResult?.user.displayName}`}>
+                <img src={signinResult?.user?.photoURL} />
               </NextLink>
             </li>
           </>
         )}
-        {!username && (
+        {!signinResult?.signedIn && (
           <li>
             <NextLink href="/enter">
               <button>Log In</button>

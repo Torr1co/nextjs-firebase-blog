@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "intellicards"
-  }
+    "default": "fir-next-blog-3d7de"
+  },
+  "targets": {}
 }
