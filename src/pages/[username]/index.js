@@ -1,24 +1,17 @@
 import UserProfile from "../../components/UserProfile";
 import PostFeed from "../../components/PostFeed";
-import { getUserWithUsername } from "../lib/firebase";
-export async function getServerSideProps({ query }) {
-  const { username } = query;
+// import { getUserWithUsername } from "../../lib/firestore";
+import { useRouter } from "next/router";
 
-  const userDoc = await getUserWithUsername(username);
+export default function UserProfilePage() {
+  const router = useRouter();
+  const { username } = router.query;
 
-  let user = null;
-  let posts = null;
+  if (!username) return <div className="loader"></div>;
 
-  if (userDoc) {
-    user = userDoc.data();
-  }
-}
-
-export default function UserProfilePage({ user, posts }) {
   return (
     <main>
-      <UserProfile user={user} />
-      <PostFeed posts={posts} />{" "}
+      <UserProfile username={username} />
     </main>
   );
 }

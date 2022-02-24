@@ -11,10 +11,11 @@ import {
   useFirebaseApp,
   FirebaseAppProvider,
   AuthProvider,
+  useInitFirestore,
 } from "reactfire";
 
 import { getAuth } from "firebase/auth"; // Firebase v9+
-import { getFirestore } from "firebase/firestore"; // Firebase v9+
+import { initializeFirestore } from "firebase/firestore"; // Firebase v9+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCO246HzqiGu6JklNXHekSLOpLj6RWTyn8",
@@ -39,7 +40,15 @@ function MyApp({ Component, pageProps }) {
 function FirebaSetup({ children }) {
   const firebaseApp = useFirebaseApp();
   const auth = getAuth(firebaseApp);
-  const database = getFirestore(firebaseApp);
+  const { status, data: database } = useInitFirestore(async (firebaseApp) => {
+    const db = initializeFirestore(firebaseApp, {});
+    return db;
+  });
+
+  if (status === "loading") {
+    return <div className="loader"></div>;
+  }
+
   return (
     // <AppCheckProvider sdk={appCheck}>
     <AuthProvider sdk={auth}>

@@ -1,49 +1,26 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import {
   useInitPerformance,
   useSigninCheck,
   useAuth,
   useFirestore,
   useFirestoreDocData,
+  useUser,
 } from "reactfire";
 import { useState, useEffect, useCallback } from "react";
 import debounce from "lodash.debounce";
 import { doc, writeBatch, getDoc } from "firebase/firestore";
-const signOut = (auth) => auth.signOut().then(() => console.log("signed out"));
-const signInWithGoogle = async (auth) => {
-  const provider = new GoogleAuthProvider();
-  await signInWithPopup(auth, provider);
-};
 
-function Auth() {
-  const { status, data: signinResult } = useSigninCheck();
-
-  if (status === "loading") {
-    return <div className="loader"></div>;
-  }
-
-  const { signedIn, user } = signinResult;
-
-  return user ? (
-    user?.displayName ? (
-      <UsernameForm />
-    ) : (
-      <SignOutButton />
-    )
-  ) : (
-    <SignInButton />
-  );
-}
-export default function Enter() {
-  return (
-    <main>
-      <Auth />
-    </main>
-  );
-}
+//sign in and sign out functions
 
 function SignInButton() {
   const auth = useAuth();
+
+  const signInWithGoogle = async (auth) => {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  };
+
   return (
     <button className="btn-google" onClick={() => signInWithGoogle(auth)}>
       <img src={"/google.png"} /> Sign in with Google
@@ -56,24 +33,43 @@ function SignOutButton() {
   return <button onClick={() => signOut(auth)}>Sign out</button>;
 }
 
+export default function Auth() {
+  const { status, data: signInResult } = useSigninCheck();
+  if (status === "loading") return <div className="loader"></div>;
+
+  //if the data is recieved, do this
+  if (signInResult.signedIn === true) {
+    return <main>UserCheck user={signInResult.user} /></main>;
+  } else {
+    return (
+      <main>
+        <SignInButton />
+      </main>
+    );
+  }
+}
+
+function UserCheck({ user }) {
+  const firestore = useFirestore();
+  const userDataRef = doc(firestore, "users", user?.uid);
+  const { data: userData } = useFirestoreDocData(userDataRef);
+  console.log(userData);
+  return userData.username ? <SignOutButton /> : <UsernameForm />;
+}
+
 function UsernameForm() {
-  const { status, data: signinResult } = useSigninCheck();
-  const { signedIn, user } = signinResult;
   const [formValue, setFormValue] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
-  const firestore = useFirestore();
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
     // Create refs for both documents
-    const userDoc = doc(firestore, "users", user.uid);
     const usernameDoc = doc(firestore, "usernames", formValue);
-
     // Commit both docs together as a batch write.
     const batch = writeBatch(firestore);
-    batch.set(userDoc, {
+    batch.set(userRef, {
       username: formValue,
       photoURL: user.photoURL,
       displayName: user.displayName,
@@ -130,39 +126,38 @@ function UsernameForm() {
       return <p></p>;
     }
   }
+
   return (
-    !username && (
-      <section>
-        <h3>Choose Username</h3>
-        <form onSubmit={onSubmit}>
-          <input
-            name="username"
-            placeholder="username"
-            value={formValue}
-            onChange={onChange}
-          />
+    <section>
+      <h3>Choose Username</h3>
+      <form onSubmit={onSubmit}>
+        <input
+          name="username"
+          placeholder="username"
+          value={formValue}
+          onChange={onChange}
+        />
 
-          <UsernameMessage
-            username={formValue}
-            isValid={isValid}
-            loading={loading}
-          />
+        <UsernameMessage
+          username={formValue}
+          isValid={isValid}
+          loading={loading}
+        />
 
-          <button className="btn-green" disabled={!isValid}>
-            Choose
-          </button>
+        <button className="btn-green" disabled={!isValid}>
+          Choose
+        </button>
 
-          <h3>Debug State</h3>
-          <div>
-            Username : {formValue}
-            <br />
-            Loading: {loading.toString()}
-            <br />
-            Username Valid: {isValid.toString()}
-            <br />
-          </div>
-        </form>
-      </section>
-    )
+        <h3>Debug State</h3>
+        <div>
+          Username : {formValue}
+          <br />
+          Loading: {loading.toString()}
+          <br />
+          Username Valid: {isValid.toString()}
+          <br />
+        </div>
+      </form>
+    </section>
   );
 }

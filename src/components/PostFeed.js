@@ -1,4 +1,7 @@
-export default function PostFeed({ posts, admin }) {
+import { useFirestore, useFirestoreCollectionData } from "reactfire";
+import { query, where, collection, limit, doc } from "firebase/firestore";
+
+export default function PostFeed({ posts }) {
   return posts
     ? posts.map((post) => (
         <PostItem post={post} key={post.slug} admin={admin} />
@@ -6,7 +9,7 @@ export default function PostFeed({ posts, admin }) {
     : null;
 }
 
-function PostItem({ post, admin = false }) {
+function PostItem() {
   // Naive method to calc word count and read time
   const wordCount = post?.content.trim().split(/\s+/g).length;
   const minutesToRead = (wordCount / 100 + 1).toFixed(0);

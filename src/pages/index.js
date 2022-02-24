@@ -2,17 +2,35 @@ import Head from "next/head";
 import Link from "next/link";
 import Loader from "../components/Loader";
 import toast from "react-hot-toast";
+import PostFeed from "../components/PostFeed";
+import { useFirestore, useFirestoreCollectionData } from "reactfire";
+import {
+  collectionGroup,
+  query,
+  where,
+  orderBy,
+  limit,
+} from "firebase/firestore";
+import { getPosts } from "../lib/firestore";
+const LIMIT = 5;
 
-// import { getUserWithUsername, getUserPosts } from "../lib/firebase";
-import { useUser } from "reactfire";
 export default function Home() {
-  const { status, data: user } = useUser();
+  const firestore = useFirestore();
+  const postsCollection = collectionGroup(firestore, "posts");
+  const postsQuery = query(
+    postsCollection,
+    where("published", "==", true),
+    orderBy("createdAt", "desc"),
+    limit(LIMIT)
+  );
 
-  console.log(user);
+  const { status, data: posts } = useFirestoreCollectionData(postsQuery);
+  getPosts(firestore, LIMIT);
+  console.log(posts);
   return (
-    <div>
+    <main>
+      <PostFeed />
       <Loader show={false} />
-      <button onClick={() => toast.success("buenass")}>Click Me</button>
-    </div>
+    </main>
   );
 }

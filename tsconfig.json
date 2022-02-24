@@ -21,7 +21,7 @@
     "**/*.tsx",
     "src/components/NavBar.js",
     "src/pages/index.js",
-    "src/lib/firebase.js",
+    "src/lib/firestore.js",
     "src/pages/_app.js"
   ],
   "exclude": ["node_modules"]
