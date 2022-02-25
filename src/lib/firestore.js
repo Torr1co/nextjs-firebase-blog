@@ -1,5 +1,6 @@
 import {
   getFirestore,
+  collection,
   doc,
   query,
   where,
@@ -9,10 +10,15 @@ import {
   collectionGroup,
 } from "firebase/firestore";
 
-export async function getUserWithUsername(username) {
-  const userRef = doc(db, "users");
-  const query = query(userRef, where("username", "==", username), limit(1));
-  const userDoc = (await query.get()).docs[0];
+export async function getUserWithUsername(firestore, username) {
+  const usersCollection = collection(firestore, "users");
+  const userQuery = query(
+    usersCollection,
+    where("username", "==", username),
+    limit(1)
+  );
+  const userDocs = await getDocs(userQuery);
+  const userDoc = userDocs.docs[0].data();
   return userDoc;
 }
 
@@ -24,7 +30,7 @@ export async function getPosts(firestore, limitNumber) {
     orderBy("createdAt", "desc")
   );
 
-  const postsSnapshot = await getDocs(postsQuery);
+  const postsSnapshot = await getDocs(postsCollection);
   console.log(postsSnapshot);
   postsSnapshot.forEach((doc) => {
     console.log(doc.id, " => ", doc.data());

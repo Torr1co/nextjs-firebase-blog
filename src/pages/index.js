@@ -24,12 +24,12 @@ export default function Home() {
     limit(LIMIT)
   );
 
-  const { status, data: posts } = useFirestoreCollectionData(postsQuery);
-  getPosts(firestore, LIMIT);
+  const { status, data: posts } = useFirestoreCollectionData(postsCollection);
+  // getPosts(firestore, LIMIT);
   console.log(posts);
   return (
     <main>
-      <PostFeed />
+      <PostFeed posts={posts} />
       <Loader show={false} />
     </main>
   );
