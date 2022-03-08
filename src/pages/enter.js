@@ -24,7 +24,7 @@ function SignInButton() {
 
   return (
     <button className="btn-google" onClick={() => signInWithGoogle(auth)}>
-      <Image src={"/google.png"} alt='google Logo'/> Sign in with Google
+      <Image src={"/google.png"} alt="google Logo" /> Sign in with Google
     </button>
   );
 }
@@ -40,7 +40,11 @@ export default function Auth() {
 
   //if the data is recieved, do this
   if (signInResult.signedIn === true) {
-    return <main>UserCheck user={signInResult.user} /></main>;
+    return (
+      <main>
+        <UserCheck user={signInResult.user} />
+      </main>
+    );
   } else {
     return (
       <main>
