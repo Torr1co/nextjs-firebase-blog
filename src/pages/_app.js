@@ -43,6 +43,7 @@ function FireSetup({ children }) {
   const firebaseApp = useFirebaseApp();
   const auth = getAuth(firebaseApp);
   const storage = getStorage(firebaseApp);
+
   const { status, data: firestore } = useInitFirestore(async (firebaseApp) => {
     const db = initializeFirestore(firebaseApp, {});
     return db;
