@@ -15,7 +15,7 @@ export default function NavBar() {
     <nav className="navbar">
       <ul>
         <li>
-          <NextLink href="/#">
+          <NextLink href="/#" passHref>
             <button className="btn-logo">NXT</button>
           </NextLink>
         </li>

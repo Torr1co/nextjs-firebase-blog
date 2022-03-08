@@ -88,7 +88,7 @@ function UsernameForm() {
     (() => checkUsername(formValue))();
   }, [formValue, checkUsername]);
 
-  const checkUsername = useCallback(
+  const checkUsername = useMemo(
     debounce(async (username) => {
       if (username.length >= 3) {
         const ref = doc(firestore, `usernames/${username}`);
