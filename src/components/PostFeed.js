@@ -3,6 +3,7 @@ import { query, where, collection, limit, doc } from "firebase/firestore";
 import Link from "next/link";
 
 export default function PostFeed({ posts, admin }) {
+  console.log("buenas");
   return posts
     ? posts.map((post) => (
         <PostItem post={post} key={post.slug} admin={admin} />
@@ -10,7 +11,7 @@ export default function PostFeed({ posts, admin }) {
     : null;
 }
 
-function PostItem({ post, key, admin }) {
+function PostItem({ post, admin }) {
   // Naive method to calc word count and read time
   const wordCount = post?.content.trim().split(/\s+/g).length;
   const minutesToRead = (wordCount / 100 + 1).toFixed(0);

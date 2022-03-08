@@ -20,11 +20,11 @@ export default function Home() {
   const postsQuery = query(
     postsCollection,
     where("published", "==", true),
-    orderBy("createdAt", "desc"),
+    orderBy("created_at", "desc"),
     limit(LIMIT)
   );
 
-  const { status, data: posts } = useFirestoreCollectionData(postsCollection);
+  const { status, data: posts } = useFirestoreCollectionData(postsQuery);
   // getPosts(firestore, LIMIT);
   console.log(posts);
   return (

@@ -5,17 +5,19 @@ import { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
 import {
-  FirestoreProvider,
-  useFirestoreDocData,
-  useFirestore,
-  useFirebaseApp,
   FirebaseAppProvider,
   AuthProvider,
+  FirestoreProvider,
+  StorageProvider,
   useInitFirestore,
+  useFirebaseApp,
+  useFirestore,
+  useFirestoreDocData,
 } from "reactfire";
 
 import { getAuth } from "firebase/auth"; // Firebase v9+
 import { initializeFirestore } from "firebase/firestore"; // Firebase v9+
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCO246HzqiGu6JklNXHekSLOpLj6RWTyn8",
@@ -30,17 +32,18 @@ const firebaseConfig = {
 function MyApp({ Component, pageProps }) {
   return (
     <FirebaseAppProvider firebaseConfig={firebaseConfig}>
-      <FirebaSetup>
+      <FireSetup>
         <Component {...pageProps} />
-      </FirebaSetup>
+      </FireSetup>
     </FirebaseAppProvider>
   );
 }
 
-function FirebaSetup({ children }) {
+function FireSetup({ children }) {
   const firebaseApp = useFirebaseApp();
   const auth = getAuth(firebaseApp);
-  const { status, data: database } = useInitFirestore(async (firebaseApp) => {
+  const storage = getStorage(firebaseApp);
+  const { status, data: firestore } = useInitFirestore(async (firebaseApp) => {
     const db = initializeFirestore(firebaseApp, {});
     return db;
   });
@@ -52,10 +55,12 @@ function FirebaSetup({ children }) {
   return (
     // <AppCheckProvider sdk={appCheck}>
     <AuthProvider sdk={auth}>
-      <FirestoreProvider sdk={database}>
-        <NavBar />
-        {children}
-        <Toaster />
+      <FirestoreProvider sdk={firestore}>
+        <StorageProvider sdk={storage}>
+          <NavBar />
+          {children}
+          <Toaster />
+        </StorageProvider>
       </FirestoreProvider>
     </AuthProvider>
     // </AppCheckProvider>

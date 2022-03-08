@@ -19,7 +19,6 @@ export default function UserProfilePage() {
   }, [username]);
 
   if (!username) return <div className="loader"></div>;
-
   return (
     <main>
       <UserProfile user={user} />
