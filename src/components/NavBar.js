@@ -53,7 +53,7 @@ function NavBarSignedIn({ user }) {
 function NavBarNotSignedIn() {
   return (
     <li>
-      <NextLink href="/enter">
+      <NextLink href="/enter" passHref>
         <button>Log In</button>
       </NextLink>
     </li>

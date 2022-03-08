@@ -33,7 +33,7 @@ function PostList() {
       const userRef = doc(firestore, "users", user?.uid);
       setPosts(await getUserPosts(userRef));
     })();
-  }, [status, firestore]);
+  }, [status, firestore, user?.uid]);
   return <PostFeed posts={posts} admin />;
 }
 
