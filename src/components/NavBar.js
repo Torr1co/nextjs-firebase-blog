@@ -6,6 +6,7 @@ import {
   useFirestoreDocData,
 } from "reactfire";
 import { doc } from "firebase/firestore";
+import Image from "next/image";
 
 export default function NavBar() {
   const { status, data: signInResult } = useSigninCheck();
@@ -36,13 +37,13 @@ function NavBarSignedIn({ user }) {
   return (
     <>
       <li className="push-left">
-        <NextLink href="/admin">
+        <NextLink href="/admin" passHref>
           <button className="btn-blue">Write Posts</button>
         </NextLink>
       </li>
       <li>
-        <NextLink href={`/${userData?.username}`}>
-          <img src={userData?.photoURL} />
+        <NextLink href={`/${userData?.username}`} passHref>
+          <Image src={userData?.photoURL} alt="User Logo" />
         </NextLink>
       </li>
     </>

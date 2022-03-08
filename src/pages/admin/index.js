@@ -27,11 +27,13 @@ function PostList() {
   const { status, data: user } = useUser();
   const [posts, setPosts] = useState(null);
 
-  useEffect(async () => {
-    if (status === "loading") return;
-    const userRef = doc(firestore, "users", user?.uid);
-    setPosts(await getUserPosts(userRef));
-  }, [status]);
+  useEffect(() => {
+    (async () => {
+      if (status === "loading") return;
+      const userRef = doc(firestore, "users", user?.uid);
+      setPosts(await getUserPosts(userRef));
+    })();
+  }, [status, firestore]);
   return <PostFeed posts={posts} admin />;
 }
 

@@ -10,6 +10,7 @@ import {
 import { useState, useEffect, useCallback } from "react";
 import debounce from "lodash.debounce";
 import { doc, writeBatch, getDoc } from "firebase/firestore";
+import Image from "next/image";
 
 //sign in and sign out functions
 
@@ -23,7 +24,7 @@ function SignInButton() {
 
   return (
     <button className="btn-google" onClick={() => signInWithGoogle(auth)}>
-      <img src={"/google.png"} /> Sign in with Google
+      <Image src={"/google.png"} alt='google Logo'/> Sign in with Google
     </button>
   );
 }

@@ -12,11 +12,13 @@ export default function UserProfilePage() {
   const { username } = router.query;
   const [user, setUser] = useState(null);
 
-  useEffect(async () => {
-    if (username) {
-      setUser(await getUserWithUsername(firestore, username));
-    }
-  }, [username]);
+  useEffect(() => {
+    (async () => {
+      if (username) {
+        setUser(await getUserWithUsername(firestore, username));
+      }
+    })();
+  }, [username, firestore]);
 
   if (!username) return <div className="loader"></div>;
   return (

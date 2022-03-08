@@ -15,15 +15,17 @@ export default function Slug() {
   const [postRef, setPostRef] = useState(null);
 
   console.log(post);
-  useEffect(async () => {
-    if (username && slug) {
-      setPostRef(await getPostWithUsername(firestore, username, slug));
-      if (postRef) {
-        const postDoc = await getDoc(postRef);
-        setPost(postDoc.data());
+  useEffect(() => {
+    (async () => {
+      if (username && slug) {
+        setPostRef(await getPostWithUsername(firestore, username, slug));
+        if (postRef) {
+          const postDoc = await getDoc(postRef);
+          setPost(postDoc.data());
+        }
       }
-    }
-  }, [username, slug, postRef]);
+    })();
+  }, [username, slug, postRef, firestore]);
 
   return (
     <main>
